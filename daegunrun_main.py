@@ -41,7 +41,7 @@ def Button (img_in, x, y, width, height, img_act, x_act, y_act) : # 버튼 생�
 
 
 def initGame (): # 게임 기본 설정
-    global gamepad, clock, daegune1, daegune2, daegune_slide, chair, whiteboard, obj, rnd, background, option_button, staff_button, quit_button
+    global gamepad, clock, daegune1, daegune2, daegune_slide, chair, whiteboard, obj, rnd, background, option_button, staff_button, quit_button, SOUND_ON, SOUND_OFF, daegunmark
     pg.init()
     gamepad = pg.display.set_mode (windowSize)
     pg.display.set_caption("DaeGunRun")
@@ -61,10 +61,19 @@ def initGame (): # 게임 기본 설정
     option_button = pg.transform.scale(option_button,(163,48))
 
     staff_button=pg.image.load ('staff_button.png')
-    staff_button = pg.transform.scale(staff_button,(163,48))
+    staff_button = pg.transform.scale(staff_button,(163,48)) 
 
     quit_button=pg.image.load ('Quit_Button.png')
     quit_button = pg.transform.scale(quit_button,(163,48))
+
+    SOUND_ON=pg.image.load ('ON_PLAY.png')
+    SOUND_ON = pg.transform.scale(SOUND_ON,(163,48))
+
+    SOUND_OFF=pg.image.load ('OFF_PLAY.png')
+    SOUND_OFF = pg.transform.scale(SOUND_OFF,(163,48))
+
+    daegunmark=pg.image.load("Daegun.png")
+    daegunmark = pg.transform.scale(daegunmark,(180,225))
 
     piano=pg.image.load ('piano.png')
     piano = pg.transform.scale(piano,(100,60))
@@ -81,10 +90,14 @@ def initGame (): # 게임 기본 설정
     round_L.append([[chair, 80, 96, 'down'], [whiteboard, 540, 360, 'up']])
     round_L.append([[piano, 100, 60, 'down']])
 
+    sound = pg.mixer.Sound("bgm.mp3")
+
     obj = OBJpy.object()
     rnd = RNDpy.round(round_L)
 
     clock = pg.time.Clock()
+
+
 
 
 
@@ -144,7 +157,8 @@ def startGame (): #게
         #gamepad.blit(TextSurf , TextRect)
 
         TOF = Button(option_button,430,325,163,48,option_button,423,323)   # option
-
+        
+        if TOF : option()
 
         TOF2 = Button(staff_button,430,400,163,48,staff_button,423,398)   # staff
 
@@ -235,7 +249,7 @@ def staff () :
             t1+=5
             if t1 == 510 :
                 t1 = 0
-        if t2 < 350 :
+        if t2 < 480 :
             t2+=2
             
         clock.tick (60)
@@ -244,7 +258,78 @@ def staff () :
 
 
 
+def option () :
+    global gamepad, clock, background
+    pg.init()
+    done = False 
+    t=0
+    t1=0
+    t2 = 0
+    while not done :
+        for event in pg.event.get ():
+            if event.type == pg.QUIT:
+                done = True
+            if event.type == pg.KEYDOWN :
+                if event.key == pg.K_SPACE  :
+                    done = True
 
+
+        gamepad.fill((255,255,255))
+        gamepad.blit(background,(30, -50+t))
+
+        LargeText = pg.font.SysFont( "arial", 40, True, False)
+        SmallText = pg.font.SysFont( "arial", 20, True, False)
+
+        if t1 <= 255 :
+            textSurface = LargeText.render("PRESS 'SPACE BAR' TO START",True,(0,t1,0))
+        else :
+            textSurface = LargeText.render("PRESS 'SPACE BAR' TO START",True,(0,510 - t1,0))
+        
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,windowSize[1]*4/5+t)
+        gamepad.blit(TextSurf , TextRect)
+
+        textSurface = SmallText.render("MAIN DEVELOPER : LeeDoWon",True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,700+t2)
+        gamepad.blit(TextSurf , TextRect)
+
+        textSurface = SmallText.render(" SUB DEVELOPER : LeeJuHo",True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,720+t2)
+        gamepad.blit(TextSurf , TextRect)
+
+        textSurface = SmallText.render(" TTF FROM : COOKIERUN",True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,760+t2)
+        gamepad.blit(TextSurf , TextRect)
+
+        textSurface = SmallText.render(" IMG FROM : flaticon.com",True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,780+t2)
+        gamepad.blit(TextSurf , TextRect)
+
+        TOF = Button(option_button,430,325+t,163,48,option_button,423,323+t)   # option
+
+        TOF2 = Button(staff_button,430,400+t,163,48,staff_button,423,398+t)   # staff
+
+        #OptionButton = Button(start_button2,445,260,60,20,start_button2,440,258) #참조 : https://m.blog.naver.com/scyan2011/221998190058
+
+        TOF3 = Button(SOUND_ON,430,-120+t,163,48,SOUND_ON,423,-122+t)   # ON
+
+        
+        TOF4 = Button(SOUND_OFF,430,-100+t,163,48,SOUND_OFF,423,-102+t)   # staff
+
+        pg.display.update() 
+
+        if t < 680 :
+            t+=2
+            t1+=5
+            if t1 == 510 :
+                t1 = 0
+        t2+=2
+            
+        clock.tick (60)
 
 
 
@@ -346,6 +431,7 @@ def runGame ():
         TextRect.center = (120,80)
         gamepad.blit(TextSurf , TextRect)
 
+        #Sound.play(시간)
 
         pg.display.update ()
         clock.tick (60)
