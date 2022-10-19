@@ -5,7 +5,7 @@ import time
 
 windowSize = [1020,680]
 
-def judge_conflict (a_x1, a_x2, a_y1, a_y2, b_x1, b_x2, b_y1, b_y2) :
+def judge_conflict (a_x1, a_x2, a_y1, a_y2, b_x1, b_x2, b_y1, b_y2) : # 충돌 판단 함수
     if (a_x2 < b_x1) or (a_x1 > b_x2) or (a_y1 > b_y2) or (a_y2 < b_y1):
         return False
     else :
@@ -16,7 +16,7 @@ def judge_conflict (a_x1, a_x2, a_y1, a_y2, b_x1, b_x2, b_y1, b_y2) :
 
 # x1, y2          x2, y2
 
-def Button (img_in, x, y, width, height, img_act, x_act, y_act) :
+def Button (img_in, x, y, width, height, img_act, x_act, y_act) : # 버튼 생성 함수
     mouse = pg.mouse.get_pos()   
 
     click = pg.mouse.get_pressed()
@@ -40,8 +40,8 @@ def Button (img_in, x, y, width, height, img_act, x_act, y_act) :
 
 
 
-def initGame ():
-    global gamepad, clock, daegune1, daegune2, daegune_slide, chair, whiteboard, obj, rnd, background, option_button, staff_button
+def initGame (): # 게임 기본 설정
+    global gamepad, clock, daegune1, daegune2, daegune_slide, chair, whiteboard, obj, rnd, background, option_button, staff_button, quit_button
     pg.init()
     gamepad = pg.display.set_mode (windowSize)
     pg.display.set_caption("DaeGunRun")
@@ -62,6 +62,9 @@ def initGame ():
 
     staff_button=pg.image.load ('staff_button.png')
     staff_button = pg.transform.scale(staff_button,(163,48))
+
+    quit_button=pg.image.load ('Quit_Button.png')
+    quit_button = pg.transform.scale(quit_button,(163,48))
 
     piano=pg.image.load ('piano.png')
     piano = pg.transform.scale(piano,(100,60))
@@ -101,7 +104,7 @@ def initGame ():
 
 
 
-def startGame ():
+def startGame (): #게
     global gamepad, clock, background, option_button, staff_button
     pg.init()
     done = False 
@@ -200,17 +203,17 @@ def staff () :
         TextRect.center = (windowSize[0]/2,700-t2)
         gamepad.blit(TextSurf , TextRect)
 
-        textSurface = SmallText.render(" SUB DEVELOPER : LeeJuHo",True,(0,0,0))
+        textSurface = SmallText.render("SUB DEVELOPER : LeeJuHo",True,(0,0,0))
         TextSurf , TextRect = textSurface ,textSurface.get_rect ()
         TextRect.center = (windowSize[0]/2,720-t2)
         gamepad.blit(TextSurf , TextRect)
 
-        textSurface = SmallText.render(" TTF FROM : COOKIERUN",True,(0,0,0))
+        textSurface = SmallText.render("FONT FROM : COOKIERUN",True,(0,0,0))
         TextSurf , TextRect = textSurface ,textSurface.get_rect ()
         TextRect.center = (windowSize[0]/2,760-t2)
         gamepad.blit(TextSurf , TextRect)
 
-        textSurface = SmallText.render(" IMG FROM : flaticon.com",True,(0,0,0))
+        textSurface = SmallText.render("IMG FROM : flaticon.com",True,(0,0,0))
         TextSurf , TextRect = textSurface ,textSurface.get_rect ()
         TextRect.center = (windowSize[0]/2,780-t2)
         gamepad.blit(TextSurf , TextRect)
@@ -218,6 +221,10 @@ def staff () :
         TOF = Button(option_button,430,325-t,163,48,option_button,423,323-t)   # option
 
         TOF2 = Button(staff_button,430,400-t,163,48,staff_button,423,398-t)   # staff
+
+        TOF3 = Button(quit_button,7,700-t,163,48,quit_button,0,698-t)   # Quit
+
+        if TOF3 : done = True
 
         #OptionButton = Button(start_button2,445,260,60,20,start_button2,440,258) #참조 : https://m.blog.naver.com/scyan2011/221998190058
 
@@ -228,7 +235,8 @@ def staff () :
             t1+=5
             if t1 == 510 :
                 t1 = 0
-        t2+=2
+        if t2 < 350 :
+            t2+=2
             
         clock.tick (60)
 
@@ -255,7 +263,6 @@ def runGame ():
     SmallText = pg.font.SysFont( "arial", 30, True, False)
     crahed_time = 0
     crashed = False
-    t2=0
     creahsed_time2 = 0
     while not done:
         for event in pg.event.get ():
