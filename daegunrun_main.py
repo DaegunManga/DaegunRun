@@ -41,7 +41,8 @@ def Button (img_in, x, y, width, height, img_act, x_act, y_act) : # 버튼 생�
 
 
 def initGame (): # 게임 기본 설정
-    global gamepad, clock, daegune1, daegune2, daegune_slide, chair, whiteboard, obj, rnd, background, option_button, staff_button, quit_button, SOUND_ON, SOUND_OFF, daegunmark
+    global gamepad, clock,MANGA, daegune1, daegune2, daegune_slide, chair, whiteboard, obj, rnd, background, option_button, staff_button, quit_button, SOUND_ON, SOUND_OFF, daegunmark, sound, music
+    global line, white
     pg.init()
     gamepad = pg.display.set_mode (windowSize)
     pg.display.set_caption("DaeGunRun")
@@ -66,20 +67,32 @@ def initGame (): # 게임 기본 설정
     quit_button=pg.image.load ('Quit_Button.png')
     quit_button = pg.transform.scale(quit_button,(163,48))
 
-    SOUND_ON=pg.image.load ('ON_PLAY.png')
-    SOUND_ON = pg.transform.scale(SOUND_ON,(163,48))
+    MANGA=pg.image.load ('MANGA.png')
+    MANGA = pg.transform.scale(MANGA,(163,48))
 
-    SOUND_OFF=pg.image.load ('OFF_PLAY.png')
-    SOUND_OFF = pg.transform.scale(SOUND_OFF,(163,48))
+    SOUND_OFF=pg.image.load ('ON_PLAY.png')
+    SOUND_OFF = pg.transform.scale(SOUND_OFF,(180,40))
+
+    SOUND_ON=pg.image.load ('OFF_PLAY.png')
+    SOUND_ON = pg.transform.scale(SOUND_ON,(180,40))
 
     daegunmark=pg.image.load("Daegun.png")
-    daegunmark = pg.transform.scale(daegunmark,(180,225))
+    daegunmark = pg.transform.scale(daegunmark,(100,100))
 
     piano=pg.image.load ('piano.png')
-    piano = pg.transform.scale(piano,(100,60))
+    piano = pg.transform.scale(piano,(120,120))
 
     chair=pg.image.load ('chair.png')
     chair = pg.transform.scale(chair,(80,96))
+
+    music=pg.image.load ('music.png')
+    music = pg.transform.scale(music,(360,360))
+
+    roller_paint=pg.image.load ('roller-paint.png')
+    roller_paint = pg.transform.scale(roller_paint,(151,128))
+
+    canvas=pg.image.load ('canvas.png')
+    canvas = pg.transform.scale(canvas,(309,384))
 
     whiteboard=pg.image.load ('whiteboard.png')
     whiteboard = pg.transform.scale(whiteboard,(540,360))
@@ -87,10 +100,16 @@ def initGame (): # 게임 기본 설정
     background=pg.image.load ('background.png')
     background = pg.transform.scale(background,(960,540))
 
-    round_L.append([[chair, 80, 96, 'down'], [whiteboard, 540, 360, 'up']])
-    round_L.append([[piano, 100, 60, 'down']])
+    line=pg.image.load ('line.png') 
+    line = pg.transform.scale(line,(600,50))
 
-    sound = pg.mixer.Sound("bgm.mp3")
+    white=pg.image.load ('white.png')
+    white = pg.transform.scale(white,(600,50))
+
+    round_L.append([[chair, 80, 96, 'down'], [whiteboard, 540, 360, 'up']])
+    round_L.append([[piano, 120, 120, 'down'],[music, 360, 360, 'up']])
+    round_L.append([[roller_paint, 151, 128, 'down'],[canvas, 309, 384, 'up']])
+
 
     obj = OBJpy.object()
     rnd = RNDpy.round(round_L)
@@ -118,17 +137,18 @@ def initGame (): # 게임 기본 설정
 
 
 def startGame (): #게
-    global gamepad, clock, background, option_button, staff_button
+    global gamepad, clock, background, option_button, staff_button, MUSIC_TOF
     pg.init()
     done = False 
     t=0
+    MUSIC_TOF = True
     while not done :
         for event in pg.event.get ():
             if event.type == pg.QUIT:
                 done = True
             if event.type == pg.KEYDOWN :
                 if event.key == pg.K_SPACE  :
-                    done = True
+                    runGame()
 
 
         gamepad.fill((255,255,255))
@@ -194,7 +214,7 @@ def staff () :
                 done = True
             if event.type == pg.KEYDOWN :
                 if event.key == pg.K_SPACE  :
-                    done = True
+                    runGame()
 
 
         gamepad.fill((255,255,255))
@@ -240,6 +260,9 @@ def staff () :
 
         if TOF3 : done = True
 
+        gamepad.blit(MANGA,(275, 1100-t))
+        gamepad.blit(daegunmark,(600, 1075-t))
+
         #OptionButton = Button(start_button2,445,260,60,20,start_button2,440,258) #참조 : https://m.blog.naver.com/scyan2011/221998190058
 
         pg.display.update() 
@@ -259,7 +282,7 @@ def staff () :
 
 
 def option () :
-    global gamepad, clock, background
+    global gamepad, clock, background, MUSIC_TOF
     pg.init()
     done = False 
     t=0
@@ -313,12 +336,24 @@ def option () :
 
         TOF2 = Button(staff_button,430,400+t,163,48,staff_button,423,398+t)   # staff
 
-        #OptionButton = Button(start_button2,445,260,60,20,start_button2,440,258) #참조 : https://m.blog.naver.com/scyan2011/221998190058
+        #OptionButton = Button(start_button2,445,260,60,20,start_button2,440,258) 
+        # #참조 : https://m.blog.naver.com/scyan2011/221998190058
 
-        TOF3 = Button(SOUND_ON,430,-120+t,163,48,SOUND_ON,423,-122+t)   # ON
+        MUSIC_ON = Button(SOUND_ON,430,-408+t,180,40,SOUND_ON,423,-410+t)   # ON
 
         
-        TOF4 = Button(SOUND_OFF,430,-100+t,163,48,SOUND_OFF,423,-102+t)   # staff
+        MUSIC_OFF = Button(SOUND_OFF,430,-335+t,180,40,SOUND_OFF,423,-337+t)   # staff
+
+        TOF3 = Button(quit_button,7,-660+t,163,48,quit_button,0,-662+t)   # Quit
+
+        if TOF3 : done = True
+
+        if MUSIC_ON : MUSIC_TOF = True        
+        if MUSIC_OFF : MUSIC_TOF = False
+
+
+    
+
 
         pg.display.update() 
 
@@ -338,7 +373,7 @@ def option () :
 
 
 def runGame ():
-    global gamepad, clock, daegune1, daegune2, daegune_slide, chair, whiteboard, obj, rnd, piano
+    global gamepad, clock, daegune1, daegune2, daegune_slide, chair, whiteboard, obj, rnd, piano, crahed_time, t, MUSIC_TOF
     done=False
     daegune_t = 0
     jump_motion = False
@@ -349,6 +384,7 @@ def runGame ():
     crahed_time = 0
     crashed = False
     creahsed_time2 = 0
+    round_n=0
     while not done:
         for event in pg.event.get ():
             if event.type == pg.QUIT:
@@ -366,7 +402,7 @@ def runGame ():
         gamepad.fill((255,255,255))
 
         if jump_motion :
-            MycharY += (jump_t - 19) * 1.5
+            MycharY += (jump_t - 19) * 2
             jump_t += 1
             if jump_t == 39 :
                 jump_motion = False
@@ -394,12 +430,11 @@ def runGame ():
                 gamepad.blit (daegune2,(40, MycharY))
 
         
-        L = rnd.startgame(t)
-        
+        L, round_n = rnd.startgame(t)
         
         for e in L :
             gamepad.blit(e[2], (e[0], e[1]))
-            if creahsed_time2 == 60 :
+            if creahsed_time2 == 61 :
                 crashed = False
                 creahsed_time2 = 0
             if crashed :
@@ -413,7 +448,10 @@ def runGame ():
                 crahed_time += 1
                 crashed = True
         
-        
+        if round_n == 3 :
+            done = True
+            end()
+            break
         
         t += 1
         daegune_t += 1
@@ -431,17 +469,82 @@ def runGame ():
         TextRect.center = (120,80)
         gamepad.blit(TextSurf , TextRect)
 
-        #Sound.play(시간)
+        #if MUSIC_TOF :
+            #sound.play(-1)
 
         pg.display.update ()
         clock.tick (60)
     pg.quit ()
 
 
+def end ():
+    global crahed_time, t, f, line, white 
+    done = False
+    #f = open("id.txt", 'w')
+    #f.write(id)
+    #f.close()
+    #id+=1
+    id=0
+    t_id = 0
+    t_time = 0
+    t_crash = 0
+    t_line = 0
+    t_sum = 0
+    while not done :
+        for event in pg.event.get ():
+            if event.type == pg.QUIT:
+                done = True
+
+        gamepad.fill((255,255,255))      
+
+        LargeText = pg.font.SysFont( "arial", 40, True, False)
+
+        if id != t_id :
+            t_id += 1
+        elif round(t/60, 1) != round(t_time,1) :
+            t_time += 0.1
+        elif round(t_crash, 1) != round(crahed_time, 1):
+            t_crash+= 0.1
+        elif t_line != 600 :
+            t_line += 5
+        elif round(t_sum, 1) != round(t/60, 1) + round(crahed_time, 1) :
+            t_sum += 0.1
+        
+
+        gamepad.blit (line,(210,380))
+        gamepad.blit (white,(210+t_line,380))
+
+        textSurface = LargeText.render("YOUR ID : "+str(t_id),True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (500,150)
+        gamepad.blit(TextSurf , TextRect)
+        
+        textSurface = LargeText.render("TIME : "+str(round(t_time,1)),True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (500,320)
+        gamepad.blit(TextSurf , TextRect)
+
+        textSurface = LargeText.render("Crashed Time : "+str(round(t_crash,1)),True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (500,370)
+        gamepad.blit(TextSurf , TextRect)
+        
+        textSurface = LargeText.render("Score : "+str(round(t_sum,1)),True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (490,430)
+        gamepad.blit(TextSurf , TextRect) 
+
+        if t_sum == 0 :
+            gamepad.blit (white,(190,410))
+
+        pg.display.update ()
+        clock.tick (60)
+
+    initGame()
+    startGame()
 
 initGame ()
-startGame( )
-runGame()
+startGame()
 
 #git add .
 #git commit -m origin
