@@ -209,6 +209,7 @@ def startGame (): #게
         TOF2 = Button(staff_button,430,360,163,48,staff_button,423,358)   # staff
 
         if TOF2 : staff()
+        if TOF : option()
 
         TOF3 = Button(graph_button,430,420,163,48,graph_button,423,418)   # graph
 
@@ -443,6 +444,87 @@ def option () :
         clock.tick (60)
 
 
+<<<<<<< HEAD
+=======
+
+
+
+
+def option () :
+    global gamepad, clock, background
+    pg.init()
+    done = False 
+    t=0
+    t1=0
+    t2 = 0
+    while not done :
+        for event in pg.event.get ():
+            if event.type == pg.QUIT:
+                done = True
+            if event.type == pg.KEYDOWN :
+                if event.key == pg.K_SPACE  :
+                    done = True
+
+
+        gamepad.fill((255,255,255))
+        gamepad.blit(background,(30, -50+t))
+
+        LargeText = pg.font.SysFont( "arial", 40, True, False)
+        SmallText = pg.font.SysFont( "arial", 20, True, False)
+
+        if t1 <= 255 :
+            textSurface = LargeText.render("PRESS 'SPACE BAR' TO START",True,(0,t1,0))
+        else :
+            textSurface = LargeText.render("PRESS 'SPACE BAR' TO START",True,(0,510 - t1,0))
+        
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,windowSize[1]*4/5+t)
+        gamepad.blit(TextSurf , TextRect)
+
+        textSurface = SmallText.render("MAIN DEVELOPER : LeeDoWon",True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,700+t2)
+        gamepad.blit(TextSurf , TextRect)
+
+        textSurface = SmallText.render(" SUB DEVELOPER : LeeJuHo",True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,720+t2)
+        gamepad.blit(TextSurf , TextRect)
+
+        textSurface = SmallText.render(" TTF FROM : COOKIERUN",True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,760+t2)
+        gamepad.blit(TextSurf , TextRect)
+
+        textSurface = SmallText.render(" IMG FROM : flaticon.com",True,(0,0,0))
+        TextSurf , TextRect = textSurface ,textSurface.get_rect ()
+        TextRect.center = (windowSize[0]/2,780+t2)
+        gamepad.blit(TextSurf , TextRect)
+
+        TOF = Button(option_button,430,325+t,163,48,option_button,423,323+t)   # option
+
+        TOF2 = Button(staff_button,430,400+t,163,48,staff_button,423,398+t)   # staff
+
+        #OptionButton = Button(start_button2,445,260,60,20,start_button2,440,258) #참조 : https://m.blog.naver.com/scyan2011/221998190058
+
+        pg.display.update() 
+
+        if t < 680 :
+            t+=2
+            t1+=5
+            if t1 == 510 :
+                t1 = 0
+        t2+=2
+            
+        clock.tick (60)
+
+
+
+
+
+
+
+>>>>>>> 727e4daf0afc537812ae0b707733522a99bf58d5
 def runGame ():
     global gamepad, clock, daegune1, daegune2, daegune_slide, chair, whiteboard, obj, rnd, piano, crahed_time, t, MUSIC_TOF
     done=False
@@ -767,8 +849,13 @@ def end ():
     startGame()
 
 initGame ()
+<<<<<<< HEAD
 startGame()
 
 #git add .
 #git commit -m origin
 #git push
+=======
+startGame( )
+runGame()
+>>>>>>> 727e4daf0afc537812ae0b707733522a99bf58d5
