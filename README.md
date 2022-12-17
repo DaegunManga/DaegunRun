@@ -33,8 +33,10 @@
 ## 모든 png : 사용하는 사진
 ## mp3 : 음질은 좋지 않지만, 음악 나올 수 있음 (현재 주석 처리, 나오지 않음.)
 
+<br>
 
-<span style='background-color: #ffdce0'>soonchan.png, ttf 파일의 부재 등으로 바로 실행은 불가능함.</span>
-<span style='background-color: #ffdce0'>깃허브 사용이 미숙해서 파일 업로드 오류, 정리 등이 안되어있는 점 죄송합니다..</span>
+<span style='color: red'>soonchan.png, ttf 파일의 부재 등으로 바로 실행은 불가능함.</span>
+<br>
+<span style='color: red'>깃허브 사용이 미숙해서 파일 업로드 오류, 정리 등이 안되어있는 점 죄송합니다..</span>
 
 
